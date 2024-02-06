@@ -17,7 +17,7 @@ and open the template in the editor.
         <style>
             h1 {text-align: center;padding-bottom: 50px;}
             h2 {text-align: center;padding-bottom: 20px;}
-
+            h5 {text-align: left; font-weight: bold;}
         </style>
         
         
@@ -58,6 +58,17 @@ and open the template in the editor.
                 <p id="size"></p>
                 <p id="dist"></p>
                 </div>
+                <h2> Enter Specs <h2>
+                    <form class = "form-group">
+                        <h5> Enter Radio Frequency (Hz): </h5>
+                        <input type = "text" class = "form-control" id = "textData" placeHolder = "2400000000"></input>
+                    
+                        <h5> Enter Flight Distance (ft): </h5>
+                        <input type = "text" class = "form-control" id = "textData" placeHolder = "400"></input>
+                    
+                        <h5> Enter Flight Altitude (ft): </h5>
+                        <input type = "text" class = "form-control" id = "textData" placeHolder = "100"></input>
+                    </form>
             </div>
             <div class="col-sm-9">
                 <canvas id="myChart"></canvas>
