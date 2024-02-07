@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>Visual Line of Distance Estimator 2</title>
+        <title>Visual Line of Distance Estimator</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
@@ -17,14 +17,16 @@ and open the template in the editor.
         <style>
             h1 {text-align: center;padding-bottom: 50px;}
             h2 {text-align: center;padding-bottom: 20px;}
-
+            h5 {text-align: left; font-weight: bold;}
+            #rFrequency, #fDistance, #fAltitude{}
+            #testForm{text-align:left; font-size:14pt;}
         </style>
         
         
     </head>
     <body>
         <div class="container-fluid">
-        <h1 style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Estimate How Far You Can See Your Drone 2</h1>
+        <h1 style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">Estimate How Far You Can See Your Drone</h1>
         <div class="row">
             
             <div class="col-sm-3">
@@ -58,6 +60,20 @@ and open the template in the editor.
                 <p id="size"></p>
                 <p id="dist"></p>
                 </div>
+                <h2> Enter Specs <h2>
+                    <form id = "testForm">
+                        <label for="rFrequency"> Enter Radio Frequency (Hz): </label><br>
+                        <input type="text" id="rFrequency" name="rFrequency" placeholder="2400000000"><br>
+                    
+                        <label for="fDistance"> Enter Flight Distance (ft): </label><br>
+                        <input type="text" id="fDistance" name="fDistance" placeholder="400"><br>
+                        
+                        <label for="fAltitude"> Enter Flight Altitude (ft): </label><br>
+                        <input type="text" id="fAltitude" name="fAltitude" placeholder="100"><br>
+                        
+                        <button type="button" id = "fSubmit" class="btn btn-primary">Enter</button>
+
+                    </form>
             </div>
             <div class="col-sm-9">
                 <canvas id="myChart"></canvas>
@@ -221,6 +237,7 @@ and open the template in the editor.
 			y: 50.4}
 	};
     
+    const fSubmit = document.getElementById("fSubmit");
     const pbt = document.getElementById("pbt");
     const rbt = document.getElementById("rbt");
     const sizeText = document.getElementById('size');
@@ -242,6 +259,13 @@ and open the template in the editor.
         sizeText.innerHTML = "";
         nameText.innerHTML = "";
         distText.innerHTML = "";
+    }
+
+    fSubmit.onclick = function(){
+        window.alert("hello world");
+        // textElement = document.querySelector(#fSubmit)
+        // output = textElement.value;
+        // var fresnel = 
     }
     
     
