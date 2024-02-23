@@ -60,20 +60,17 @@ and open the template in the editor.
                 <p id="size"></p>
                 <p id="dist"></p>
                 </div>
-                <h2> Enter Specs <h2>
-                    <form id = "testForm">
-                        <label for="rFrequency"> Enter Radio Frequency (Hz): </label><br>
-                        <input type="text" id="rFrequency" name="rFrequency" placeholder="2400000000"><br>
-                    
-                        <label for="fDistance"> Enter Flight Distance (ft): </label><br>
-                        <input type="text" id="fDistance" name="fDistance" placeholder="400"><br>
-                        
-                        <label for="fAltitude"> Enter Flight Altitude (ft): </label><br>
-                        <input type="text" id="fAltitude" name="fAltitude" placeholder="100"><br>
-                        
-                        <button type="button" id = "fSubmit" class="btn btn-primary">Enter</button>
-
+                    <form id="frequencyFrom">
+                        <h5>Select Drone Radio Frequency (GHz):</h5>
+                        <input type="radio" name="frequency" id="2.4" value="2.4"">
+                        <label for="option1">2.4</label><br>
+                        <input type="radio" name="frequency" id="5.8" value="5.8" ">
+                        <label for="option1">5.8</label>
                     </form>
+                    <button type="button" id = "fSubmit" >Enter</button>
+                   
+                    <div id="frequencyResult"></div>
+
             </div>
             <div class="col-sm-9">
                 <canvas id="myChart"></canvas>
@@ -244,8 +241,8 @@ and open the template in the editor.
     const nameText = document.getElementById('name');
     const distText = document.getElementById('dist');
     
+    //drone plot button
     pbt.onclick= function(){
-        
         selectElement = document.querySelector('#sel');
         output = selectElement.value;  
         var drone = droneList[output];
@@ -255,17 +252,24 @@ and open the template in the editor.
         
         
     }
+
+    //drone reset button
     rbt.onclick=function(){
         sizeText.innerHTML = "";
         nameText.innerHTML = "";
         distText.innerHTML = "";
     }
+    
+    //fresnel submit button
+    fSubmit.onclick = function() {
+      var selectedFrequency = document.querySelector('input[name="frequency"]:checked');
 
-    fSubmit.onclick = function(){
-        window.alert("hello world");
-        // textElement = document.querySelector(#fSubmit)
-        // output = textElement.value;
-        // var fresnel = 
+      if (selectedFrequency) {
+        var frequencyValue = selectedFrequency.value;
+        window.alert("Selected frequency: " + frequencyValue);
+      } else {
+        document.getElementById('frequencyResult').innerText = "Please select a frequency option.";
+      }
     }
     
     
@@ -327,6 +331,53 @@ and open the template in the editor.
         return d
     }
     
+    //constants 
+    const C = 299792458; // speed of light in m/s
+      const scale = 3.28084; // m to feet conversion
+
+      //user inputs 
+      // function fresnelInput() {
+      //   var f_hz = document.getElementById("myText").value;
+      // }  
+      const f_hz = document.getElementById(); // Hz - Radio Frequency
+      const D_ft = 400; //ft
+      const Alt_ft = 100;
+      
+      //Sim Parameters
+      const D_m = D_ft / scale; // Convert to meters for calculations
+      const Alt_m = Alt_ft / scale; // Convert to meters for calculations
+      const azi = Math.atan2(Alt_m, D_m); // Calculate azimuth (up angle)
+      const steps = 100; // Slices to evaluate, adjust for more/less roundedness
+      const d1 = Array.from({ length: steps }, (_, i) => i * (D_m / (steps - 1))); // Creating a linear spacing for X steps
+      const d2 = d1.map(d => D_m - d); // m - Used for ratio from one side to the other
+      const n = 1; // Fresnel parameter, 1 is appropriate to use
+      const lambda_f = C / f_hz; // m Calculate the wavelength of the radio frequency
+      const rn = d1.map(i => Math.sqrt(n * (i * (D_m - i) / D_m) * lambda_f)); // Create an empty vector for the radius
+
+
+      // Rotation Matrix
+      const rotz = [
+        [Math.cos(azi), -Math.sin(azi)],
+        [Math.sin(azi), Math.cos(azi)],
+      ];
+
+      // Rotate points as if the drone is in the sky
+      const pts_top_rot = d1.map((d, i) => [
+          rotz[0][0] * d + rotz[0][1] * rn[i],
+          rotz[1][0] * d + rotz[1][1] * rn[i]
+      ]);
+
+      const pts_bot_rot = d1.map((d, i) => [
+          rotz[0][0] * d + rotz[0][1] * (-rn[i]),
+          rotz[1][0] * d + rotz[1][1] * (-rn[i])
+      ]);
+    //plotting code
+    const topEllipseData = pts_top_rot.map(([x, y]) => ({ x: x * scale, y: y * scale }));
+    const bottomEllipseData = pts_bot_rot.map(([x, y]) => ({ x: x * scale, y: y * scale }));
+
+    // Connect the last point of the top ellipse to the first point of the bottom ellipse
+    const closedEllipseData = [...topEllipseData, topEllipseData[0], ...bottomEllipseData.reverse()];
+
     
     
     </script> 
